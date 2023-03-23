@@ -5,7 +5,6 @@ edition = "2021"
 authors = ["Danny Althoff <fibrefox@dynamicfiles.de>"]
 description = "Rust based password encoders for Spring Security password hashes"
 license = "Apache-2.0"
-license-file = "LICENSE"
 keywords = ["spring", "boot", "security", "password"]
 categories = ["authentication", "cryptography"]
 repository = "https://github.com/FibreFoX/spring-password-encoders"
