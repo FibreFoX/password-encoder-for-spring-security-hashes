@@ -1,0 +1,35 @@
+[package]
+name = "spring-password-encoders"
+version = "0.1.0"
+edition = "2021"
+authors = ["Danny Althoff <fibrefox@dynamicfiles.de>"]
+description = "Rust based password encoders for Spring Security password hashes"
+license = "Apache-2.0"
+keywords = ["spring", "boot", "security", "password"]
+categories = ["authentication", "cryptography"]
+publish = false
+
+[badges]
+maintenance = {status = "experimental"}
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# {argon2}	new org.springframework.security.crypto.argon2.Argon2PasswordEncoder();
+argon2 = "0.5.0"
+# {bcrypt}	new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+bcrypt = "0.14.0"
+# {pbkdf2}	new org.springframework.security.crypto.password.Pbkdf2PasswordEncoder();
+pbkdf2 = "0.12.1"
+# {scrypt}	new org.springframework.security.crypto.scrypt.SCryptPasswordEncoder();
+scrypt = "0.11.0"
+
+# ??? für die 4 diese lib hier nutzen? -> https://docs.rs/password-hash/latest/password_hash/
+# oder https://github.com/RustCrypto/password-hashes
+
+# {ldap}	new org.springframework.security.crypto.password.LdapShaPasswordEncoder();
+# {MD4}	    new org.springframework.security.crypto.password.Md4PasswordEncoder();
+# {MD5}	    new org.springframework.security.crypto.password.MessageDigestPasswordEncoder(“MD5”);
+# {SHA-1}	new org.springframework.security.crypto.password.MessageDigestPasswordEncoder(“SHA-1”);
+# {SHA-256}	new org.springframework.security.crypto.password.MessageDigestPasswordEncoder(“SHA-256”);
+# {sha256}	new org.springframework.security.crypto.password.StandardPasswordEncoder();
