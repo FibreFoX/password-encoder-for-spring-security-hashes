@@ -50,7 +50,7 @@ Checking if password matches:
 
 ### Icon legend
 
-✏️: implementation planned / work in progress
+✏️: implementation planned / work in progress  
 ✅: implemented
 
 ## License
