@@ -4,7 +4,7 @@ use crate::PasswordEncoder;
 pub struct NoOpPasswordEncoder {}
 
 impl PasswordEncoder for NoOpPasswordEncoder {
-    fn matches(&self,  raw_password: String, encoded_password: String) -> bool {
+    fn matches(&self, raw_password: String, encoded_password: String) -> bool {
         encoded_password.eq(&raw_password)
     }
 
@@ -12,7 +12,6 @@ impl PasswordEncoder for NoOpPasswordEncoder {
         Some(raw_password.clone())
     }
 }
-
 
 #[cfg(test)]
 mod tests {
