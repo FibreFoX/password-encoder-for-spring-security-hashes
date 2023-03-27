@@ -39,9 +39,9 @@ fn get_encoder_id(
         .map(|found_id| found_id.to_string())
 }
 
-fn get_encoder_for_id(encoder_id: &String) -> Option<dyn PasswordEncoder> {
+fn get_encoder_for_id(encoder_id: &String) -> Option<Box<dyn PasswordEncoder>> {
     todo!();
-    Some(crate::encoder::noop::NoOpPasswordEncoder {})
+    Some(Box::new(crate::encoder::noop::NoOpPasswordEncoder {}))
 }
 
 #[cfg(test)]
