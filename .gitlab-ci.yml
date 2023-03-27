@@ -1,6 +1,20 @@
 stages:
   - build
 
+default:
+  cache:
+    paths:
+      - .cargo/bin
+      - .cargo/registry/index
+      - .cargo/registry/cache
+      - .cargo/git/db
+
+variables:
+  CARGO_HOME: $CI_PROJECT_DIR/.cargo
+  # better performance for caching small files
+  # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/1797
+  FF_USE_FASTZIP: 1
+
 rust:
   stage: build
   parallel:
