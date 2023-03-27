@@ -1,0 +1,14 @@
+stages:
+  - build
+
+rust:
+  stage: build
+  parallel:
+    matrix:
+      - BUILD_IMAGE:
+          - "rust:1.68"
+          - "rustlang/rust:nightly"
+  image: $BUILD_IMAGE
+  script:
+    - cargo build --verbose
+    - cargo test --verbose
