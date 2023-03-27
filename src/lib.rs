@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 pub mod encoder;
 
 pub trait PasswordEncoder {
