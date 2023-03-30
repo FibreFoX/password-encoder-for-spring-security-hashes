@@ -24,6 +24,68 @@ impl Default for DelegatingPasswordEncoder {
     }
 }
 
+fn get_encoder_for_id<'a>(
+    encoder_id: &'a String,
+    encoders: &'a HashMap<String, Box<dyn PasswordEncoder>>,
+) -> Option<&'a Box<dyn PasswordEncoder>> {
+    if !encoders.contains_key(encoder_id) {
+        return None;
+    }
+    encoders.get(encoder_id)
+}
+
+#[cfg(test)]
+mod test_get_encoder_for_id {
+    use super::get_encoder_for_id;
+    use crate::PasswordEncoder;
+    use std::collections::HashMap;
+
+    #[test]
+    fn no_encoders_in_map() {
+        let encoder_id = String::from("noop");
+        let encoders: HashMap<String, Box<dyn PasswordEncoder>> = HashMap::new();
+        let result = get_encoder_for_id(&encoder_id, &encoders);
+        // assert_eq! does not work, so use matches! inside
+        // this was a GIANT rabbit whole to follow the Box<dyn Trait> bunny
+        // https://users.rust-lang.org/t/issues-in-asserting-result/61198/2
+        assert!(matches!(result, None), "should not find any encoder in empty list");
+    }
+
+    #[test]
+    fn no_matching_encoders_in_map(){
+        let encoder_id = String::from("noop");
+        let different_encoder_id = String::from("different");
+        let mut encoders: HashMap<String, Box<dyn PasswordEncoder>> = HashMap::new();
+        encoders.insert(
+            different_encoder_id,
+            Box::new(crate::encoder::noop::NoOpPasswordEncoder {}),
+        );
+
+        let result = get_encoder_for_id(&encoder_id, &encoders);
+        // assert_eq! does not work, so use matches! inside
+        // this was a GIANT rabbit whole to follow the Box<dyn Trait> bunny
+        // https://users.rust-lang.org/t/issues-in-asserting-result/61198/2
+        assert!(matches!(result, None), "should not find encoder as it is not in the list");
+    }
+
+    #[test]
+    fn finds_encoders_in_map(){
+        let encoder_id = String::from("noop");
+        let noop_encoder_box = Box::new(crate::encoder::noop::NoOpPasswordEncoder {});
+        let mut encoders: HashMap<String, Box<dyn PasswordEncoder>> = HashMap::new();
+        encoders.insert(
+            encoder_id.clone(),
+            noop_encoder_box,
+        );
+
+        let result = get_encoder_for_id(&encoder_id, &encoders);
+        // assert_eq! does not work, so use matches! inside
+        // this was a GIANT rabbit whole to follow the Box<dyn Trait> bunny
+        // https://users.rust-lang.org/t/issues-in-asserting-result/61198/2
+        assert!(matches!(result, Some(noop_encoder_box)), "should find the encoder");
+    }
+}
+
 fn get_encoder_id(
     encoded_password: &String,
     id_prefix: &String,
@@ -37,11 +99,6 @@ fn get_encoder_id(
         .find(id_suffix)
         .and_then(|suffix_position| encoded_password.get(id_prefix.len()..suffix_position))
         .map(|found_id| found_id.to_string())
-}
-
-fn get_encoder_for_id(encoder_id: &String) -> Option<Box<dyn PasswordEncoder>> {
-    todo!();
-    Some(Box::new(crate::encoder::noop::NoOpPasswordEncoder {}))
 }
 
 #[cfg(test)]
