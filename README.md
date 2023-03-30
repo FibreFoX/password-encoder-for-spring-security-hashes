@@ -31,22 +31,22 @@ Checking if password matches:
 
 ## Supported encoders
 
-| identifier | Spring Security password encoder class                                              | matches | encode |
-|------------|-------------------------------------------------------------------------------------|:-------:|:------:|
-|            | org.springframework.security.crypto.password.DelegatingPasswordEncoder              |   ✏️    |   ✏️   |
-| argon2     | org.springframework.security.crypto.argon2.Argon2PasswordEncoder                    |   ✏️    |   ✏️   |
-| bcrypt     | org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder                    |   ✏️    |   ✏️   |
-| pbkdf2     | org.springframework.security.crypto.password.Pbkdf2PasswordEncoder                  |   ✏️    |   ✏️   |
-| scrypt     | org.springframework.security.crypto.scrypt.SCryptPasswordEncoder                    |   ✏️    |   ✏️   |
-| ldap       | org.springframework.security.crypto.password.LdapShaPasswordEncoder                 |   ✏️    |   ✏️   |
-| MD4        | org.springframework.security.crypto.password.Md4PasswordEncoder                     |   ✏️    |   ✏️   |
-| MD5        | org.springframework.security.crypto.password.MessageDigestPasswordEncoder (md5)     |   ✏️    |   ✏️   |
-| SHA-1      | org.springframework.security.crypto.password.MessageDigestPasswordEncoder (sha-1)   |   ✏️    |   ✏️   |
-| SHA-256    | org.springframework.security.crypto.password.MessageDigestPasswordEncoder (sha-256) |   ✏️    |   ✏️   |
-| noop       | org.springframework.security.crypto.password.NoOpPasswordEncoder                    |    ✅    |   ✅    |
-| sha256     | org.springframework.security.crypto.password.StandardPasswordEncoder                |   ✏️    |   ✏️   |
+| identifier | Spring Security password encoder class                                              | matches | encode | delegated | 
+|------------|-------------------------------------------------------------------------------------|:-------:|:------:|:---------:|
+|            | org.springframework.security.crypto.password.DelegatingPasswordEncoder              |   ✏️    |   ✏️   |     -     |
+| argon2     | org.springframework.security.crypto.argon2.Argon2PasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
+| bcrypt     | org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
+| pbkdf2     | org.springframework.security.crypto.password.Pbkdf2PasswordEncoder                  |   ✏️    |   ✏️   |    ✏️     |
+| scrypt     | org.springframework.security.crypto.scrypt.SCryptPasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
+| ldap       | org.springframework.security.crypto.password.LdapShaPasswordEncoder                 |   ✏️    |   ✏️   |    ✏️     |
+| MD4        | org.springframework.security.crypto.password.Md4PasswordEncoder                     |   ✏️    |   ✏️   |    ✏️     |
+| MD5        | org.springframework.security.crypto.password.MessageDigestPasswordEncoder (md5)     |   ✏️    |   ✏️   |    ✏️     |
+| SHA-1      | org.springframework.security.crypto.password.MessageDigestPasswordEncoder (sha-1)   |   ✏️    |   ✏️   |    ✏️     |
+| SHA-256    | org.springframework.security.crypto.password.MessageDigestPasswordEncoder (sha-256) |   ✏️    |   ✏️   |    ✏️     |
+| noop       | org.springframework.security.crypto.password.NoOpPasswordEncoder                    |    ✅    |   ✅    |    ✏️     |
+| sha256     | org.springframework.security.crypto.password.StandardPasswordEncoder                |   ✏️    |   ✏️   |    ✏️     |
 
-**Note:** the replacement for `DelegatingPasswordEncoder` supports all the encoders listed above (depending on their status)
+**Note:** the replacement for `DelegatingPasswordEncoder` will support all the encoders listed above (depending on their status)
 
 ### Icon legend
 
