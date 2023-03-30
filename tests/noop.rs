@@ -1,5 +1,5 @@
-use spring_password_encoders::PasswordEncoder;
 use spring_password_encoders::encoder::noop::NoOpPasswordEncoder;
+use spring_password_encoders::PasswordEncoder;
 
 #[test]
 fn crate_noop_encode() {
