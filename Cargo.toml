@@ -1,13 +1,14 @@
 [package]
-name = "spring-password-encoders"
+name = "password-encoder-for-spring-security-hashes"
 version = "0.1.0"
 edition = "2021"
 authors = ["Danny Althoff <fibrefox@dynamicfiles.de>"]
-description = "Rust based password encoders for Spring Security password hashes"
+description = "Rust based password encoders for Spring Security hashes"
 license = "Apache-2.0"
 keywords = ["spring", "boot", "security", "password"]
 categories = ["authentication", "cryptography"]
-repository = "https://github.com/FibreFoX/spring-password-encoders"
+repository = "https://github.com/FibreFoX/password-encoder-for-spring-security-hashes"
+# TODO remove the following before first release
 publish = false
 
 [badges]
