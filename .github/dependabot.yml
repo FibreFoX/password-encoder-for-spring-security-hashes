@@ -1,3 +1,9 @@
 version: 2
 
-package-ecosystem: cargo
+updates:
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # TODO remove the following before first release
+    open-pull-requests-limit: 0
