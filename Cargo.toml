@@ -20,7 +20,10 @@ maintenance = {status = "experimental"}
 # {argon2}	new org.springframework.security.crypto.argon2.Argon2PasswordEncoder();
 argon2 = "0.5.0"
 # {bcrypt}	new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
-bcrypt = "0.14.0"
+bcrypt = { version = "0.14.0", features = ["default", "alloc"]}
+# {MD4}	    new org.springframework.security.crypto.password.Md4PasswordEncoder();
+md4 = "0.10.2"
+hex = "0.4.3"
 # {pbkdf2}	new org.springframework.security.crypto.password.Pbkdf2PasswordEncoder();
 pbkdf2 = "0.12.1"
 # {scrypt}	new org.springframework.security.crypto.scrypt.SCryptPasswordEncoder();
@@ -30,7 +33,6 @@ scrypt = "0.11.0"
 # oder https://github.com/RustCrypto/password-hashes
 
 # {ldap}	new org.springframework.security.crypto.password.LdapShaPasswordEncoder();
-# {MD4}	    new org.springframework.security.crypto.password.Md4PasswordEncoder();
 # {MD5}	    new org.springframework.security.crypto.password.MessageDigestPasswordEncoder(“MD5”);
 # {SHA-1}	new org.springframework.security.crypto.password.MessageDigestPasswordEncoder(“SHA-1”);
 # {SHA-256}	new org.springframework.security.crypto.password.MessageDigestPasswordEncoder(“SHA-256”);

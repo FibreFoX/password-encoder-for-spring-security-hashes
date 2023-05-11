@@ -1,5 +1,5 @@
-use spring_password_encoders::encoder::noop::NoOpPasswordEncoder;
-use spring_password_encoders::PasswordEncoder;
+use password_encoder_for_spring_security_hashes::encoder::noop::NoOpPasswordEncoder;
+use password_encoder_for_spring_security_hashes::PasswordEncoder;
 
 #[test]
 fn crate_noop_encode() {
@@ -7,7 +7,9 @@ fn crate_noop_encode() {
 
     let encoder: NoOpPasswordEncoder = Default::default();
 
-    let encoded_password = encoder.encode(given_password).unwrap();
+    let encoded_password = encoder
+        .encode_spring_security_hash(&given_password)
+        .unwrap();
 
-    assert_eq!(encoded_password, "Hello");
+    assert_eq!(encoded_password, given_password);
 }

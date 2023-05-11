@@ -1,29 +1,37 @@
+use crate::encoder::bcrypt::BCryptPasswordEncoder;
+use crate::encoder::noop::NoOpPasswordEncoder;
 use crate::PasswordEncoder;
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct DelegatingPasswordEncoder {
     id_prefix: String,
     id_suffix: String,
     default_encoder: String,
-    encoders: HashMap<String, Box<dyn PasswordEncoder>>,
+    // encoders: HashMap<String, Box<dyn PasswordEncoder>>,
 }
 
 impl Default for DelegatingPasswordEncoder {
     fn default() -> DelegatingPasswordEncoder {
-        let mut config = DelegatingPasswordEncoder {
-            id_prefix: "{".to_string(),
-            id_suffix: "}".to_string(),
-            default_encoder: "noop".to_string(),
-            encoders: HashMap::new(),
-        };
+        /* let mut config = */
+        DelegatingPasswordEncoder {
+            id_prefix: String::from("{"),
+            id_suffix: String::from("}"),
+            default_encoder: String::from("bcrypt"),
+            // encoders: HashMap::new(),
+        }
+        /*
         config.encoders.insert(
-            "noop".to_string(),
+            String::from("noop"),
             Box::new(crate::encoder::noop::NoOpPasswordEncoder {}),
         );
         config
+         */
     }
 }
 
+// somehow I have so much trouble to have this using dyn trait mechanics ... still learning Rust :D
+/*
 fn get_encoder_for_id<'a>(
     encoder_id: &'a String,
     encoders: &'a HashMap<String, Box<dyn PasswordEncoder>>,
@@ -39,16 +47,14 @@ mod test_get_encoder_for_id {
     use super::get_encoder_for_id;
     use crate::PasswordEncoder;
     use std::collections::HashMap;
+    use std::ops::Deref;
 
     #[test]
     fn no_encoders_in_map() {
         let encoder_id = String::from("noop");
         let encoders: HashMap<String, Box<dyn PasswordEncoder>> = HashMap::new();
         let result = get_encoder_for_id(&encoder_id, &encoders);
-        // assert_eq! does not work, so use matches! inside
-        // this was a GIANT rabbit whole to follow the Box<dyn Trait> bunny
-        // https://users.rust-lang.org/t/issues-in-asserting-result/61198/2
-        assert!(matches!(result, None), "should not find any encoder in empty list");
+        assert!(result.is_none(), "should not find any encoder in empty list");
     }
 
     #[test]
@@ -65,7 +71,7 @@ mod test_get_encoder_for_id {
         // assert_eq! does not work, so use matches! inside
         // this was a GIANT rabbit whole to follow the Box<dyn Trait> bunny
         // https://users.rust-lang.org/t/issues-in-asserting-result/61198/2
-        assert!(matches!(result, None), "should not find encoder as it is not in the list");
+        assert!(result.is_none(), "should not find encoder as it is not in the list");
     }
 
     #[test]
@@ -79,14 +85,41 @@ mod test_get_encoder_for_id {
         );
 
         let result = get_encoder_for_id(&encoder_id, &encoders);
+        assert_eq!(result.unwrap().deref(), noop_encoder_box.deref(), "should find the encoder");
+    }
+
+    #[test]
+    fn finds_the_wanted_encoders_in_map(){
+        let encoder_id = String::from("noop");
+        let noop_encoder = crate::encoder::noop::NoOpPasswordEncoder {};
+        let noop_encoder_box = Box::new(noop_encoder);
+
+        let different_encoder_id = String::from("bcrypt");
+        let different_encoder = crate::encoder::bcrypt::BCryptPasswordEncoder {};
+        let different_encoder_box = Box::new(different_encoder);
+
+        let mut encoders: HashMap<String, Box<dyn PasswordEncoder>> = HashMap::new();
+        encoders.insert(
+            encoder_id.clone(),
+            noop_encoder_box,
+        );
+        encoders.insert(
+            different_encoder_id.clone(),
+            different_encoder_box,
+        );
+
+        let result = get_encoder_for_id(&different_encoder_id, &encoders);
+
         // assert_eq! does not work, so use matches! inside
         // this was a GIANT rabbit whole to follow the Box<dyn Trait> bunny
         // https://users.rust-lang.org/t/issues-in-asserting-result/61198/2
-        assert!(matches!(result, Some(noop_encoder_box)), "should find the encoder");
+        assert_ne!(result.unwrap() as *const _, &noop_encoder as *const _, "should not find an unwanted encoder");
+        assert_eq!(result.unwrap() as *const _, &different_encoder as *const _, "should find the wanted encoder, not just any");
     }
 }
+ */
 
-fn get_encoder_id(
+fn get_encoder_id_from_encoded_password(
     encoded_password: &String,
     id_prefix: &String,
     id_suffix: &String,
@@ -102,8 +135,8 @@ fn get_encoder_id(
 }
 
 #[cfg(test)]
-mod test_get_encoder_id_single_char_marker {
-    use super::get_encoder_id;
+mod test_get_encoder_id_from_encoded_password_single_char_marker {
+    use super::get_encoder_id_from_encoded_password;
 
     #[test]
     fn no_encoder_id() {
@@ -111,7 +144,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             None,
             "should not find encoder id"
         );
@@ -123,7 +156,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             None,
             "should not find encoder id"
         );
@@ -135,7 +168,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             None,
             "should not find encoder id"
         );
@@ -147,7 +180,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("encoder_id".to_string()),
             "should find encoder id"
         );
@@ -159,7 +192,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("noop".to_string()),
             "should find encoder id from full encoded string"
         );
@@ -171,7 +204,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("".to_string()),
             "should find encoder id"
         );
@@ -183,7 +216,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("{encoder_id".to_string()),
             "should find encoder id with '{{' at the beginning"
         );
@@ -195,7 +228,7 @@ mod test_get_encoder_id_single_char_marker {
         let prefix = String::from("{");
         let suffix = String::from("}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("encoder_id".to_string()),
             "should find encoder id without having any '}}' at the ending, because the first suffix wins"
         );
@@ -203,8 +236,8 @@ mod test_get_encoder_id_single_char_marker {
 }
 
 #[cfg(test)]
-mod test_get_encoder_id_multiple_chars_marker {
-    use super::get_encoder_id;
+mod test_get_encoder_id_from_encoded_password_multiple_chars_marker {
+    use super::get_encoder_id_from_encoded_password;
 
     #[test]
     fn no_encoder_id() {
@@ -212,7 +245,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             None,
             "should not find encoder id"
         );
@@ -224,7 +257,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             None,
             "should not find encoder id"
         );
@@ -236,7 +269,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             None,
             "should not find encoder id"
         );
@@ -248,7 +281,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             None,
             "should not find encoder id as prefix/suffix is wrong"
         );
@@ -260,7 +293,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("encoder_id".to_string()),
             "should find encoder id"
         );
@@ -272,7 +305,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("noop".to_string()),
             "should find encoder id from full encoded string"
         );
@@ -284,7 +317,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("{{encoder_id".to_string()),
             "should find encoder id with '{{' at the beginning"
         );
@@ -296,7 +329,7 @@ mod test_get_encoder_id_multiple_chars_marker {
         let prefix = String::from("{{");
         let suffix = String::from("}}");
         assert_eq!(
-            get_encoder_id(&encoded_password, &prefix, &suffix),
+            get_encoder_id_from_encoded_password(&encoded_password, &prefix, &suffix),
             Some("encoder_id".to_string()),
             "should find encoder id without having any '}}' at the ending, because the first suffix wins"
         );
@@ -304,20 +337,47 @@ mod test_get_encoder_id_multiple_chars_marker {
 }
 
 impl PasswordEncoder for DelegatingPasswordEncoder {
-    fn matches(&self, raw_password: String, encoded_password: String) -> bool {
+    fn matches_spring_security_hash(
+        &self,
+        unencoded_password: &String,
+        encoded_password: &String,
+    ) -> bool {
         // find encoder id
-        let encoder_id = get_encoder_id(&encoded_password, &self.id_prefix, &self.id_suffix);
+        let encoder_id = get_encoder_id_from_encoded_password(
+            &encoded_password,
+            &self.id_prefix,
+            &self.id_suffix,
+        );
         match encoder_id {
-            Some(encoder_id) => todo!(),
+            Some(encoder_id) => match encoder_id.as_str() {
+                "noop" => {
+                    let encoder: NoOpPasswordEncoder = Default::default();
+                    encoder.matches_spring_security_hash(&unencoded_password, &encoded_password)
+                }
+                "bcrypt" => {
+                    let encoder: BCryptPasswordEncoder = Default::default();
+                    encoder.matches_spring_security_hash(&unencoded_password, &encoded_password)
+                }
+                _ => todo!(),
+            },
             None => false,
         }
     }
 
-    fn encode(&self, raw_password: String) -> Option<String> {
-        todo!()
-    }
-
-    fn upgrade_encoding(&self, encoded_password: String) -> bool {
-        todo!()
+    fn encode_spring_security_hash(&self, unencoded_password: &String) -> Option<String> {
+        return match self.default_encoder.as_str() {
+            "noop" => {
+                let encoder: NoOpPasswordEncoder = Default::default();
+                encoder.encode_spring_security_hash(&unencoded_password)
+            }
+            "bcrypt" => {
+                let encoder: BCryptPasswordEncoder = Default::default();
+                encoder.encode_spring_security_hash(&unencoded_password)
+            }
+            _ => {
+                // TODO
+                None
+            }
+        };
     }
 }

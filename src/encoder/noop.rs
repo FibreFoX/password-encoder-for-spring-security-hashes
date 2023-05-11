@@ -1,21 +1,26 @@
 use crate::PasswordEncoder;
 
-#[derive(Default)]
-pub struct NoOpPasswordEncoder {}
+#[derive(Debug, Default)]
+pub struct NoOpPasswordEncoder;
 
 impl PasswordEncoder for NoOpPasswordEncoder {
-    fn matches(&self, raw_password: String, encoded_password: String) -> bool {
-        encoded_password.eq(&raw_password)
+    fn matches_spring_security_hash(
+        &self,
+        unencoded_password: &String,
+        encoded_password: &String,
+    ) -> bool {
+        unencoded_password.eq(encoded_password)
     }
 
-    fn encode(&self, raw_password: String) -> Option<String> {
-        Some(raw_password.clone())
+    fn encode_spring_security_hash(&self, unencoded_password: &String) -> Option<String> {
+        Some(unencoded_password.clone())
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{NoOpPasswordEncoder, PasswordEncoder};
+    use super::PasswordEncoder;
+    use crate::encoder::noop::NoOpPasswordEncoder;
 
     #[test]
     fn encode_works() {
@@ -23,9 +28,11 @@ mod tests {
 
         let given_password = String::from("Hello");
 
-        let encoded_password = encoder.encode(given_password).unwrap();
+        let encoded_password = encoder
+            .encode_spring_security_hash(&given_password)
+            .unwrap();
 
-        assert_eq!(encoded_password, "Hello");
+        assert_eq!(encoded_password, given_password);
     }
 
     #[test]
@@ -34,9 +41,11 @@ mod tests {
 
         let given_password = String::from("");
 
-        let encoded_password = encoder.encode(given_password).unwrap();
+        let encoded_password = encoder
+            .encode_spring_security_hash(&given_password)
+            .unwrap();
 
-        assert_eq!(encoded_password, "".to_owned());
+        assert_eq!(encoded_password, given_password);
     }
 
     #[test]
@@ -46,7 +55,7 @@ mod tests {
         let wrong_password = String::from("Wrong");
         let stored_password = String::from("Hello");
 
-        let result = encoder.matches(wrong_password, stored_password);
+        let result = encoder.matches_spring_security_hash(&wrong_password, &stored_password);
 
         assert!(!result, "password should not match");
     }
@@ -58,7 +67,7 @@ mod tests {
         let correct_password = String::from("Hello");
         let stored_password = String::from("Hello");
 
-        let result = encoder.matches(correct_password, stored_password);
+        let result = encoder.matches_spring_security_hash(&correct_password, &stored_password);
 
         assert!(result, "password should match stored one");
     }
@@ -70,7 +79,7 @@ mod tests {
         let correct_password = String::from("");
         let stored_password = String::from("");
 
-        let result = encoder.matches(correct_password, stored_password);
+        let result = encoder.matches_spring_security_hash(&correct_password, &stored_password);
 
         assert!(result, "password should match stored one even if empty");
     }

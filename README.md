@@ -20,22 +20,43 @@ password-encoder-for-spring-security-hashes = "0.1.0"
 Creating a password hash:
 
 ```rust
-// TODO
+use password_encoder_for_spring_security_hashes::PasswordEncoder;
+use password_encoder_for_spring_security_hashes::encoder::delegating::DelegatingPasswordEncoder;
+
+fn main() {
+    let encoder: DelegatingPasswordEncoder = Default::default();
+
+    let some_entered_password = String::from("SomeSecurePassword");
+
+    let password_hash_to_store = encoder.encode_spring_security_hash(&some_entered_password);
+}
 ```
 
 Checking if password matches:
 
 ```rust
-// TODO
+use password_encoder_for_spring_security_hashes::PasswordEncoder;
+use password_encoder_for_spring_security_hashes::encoder::delegating::DelegatingPasswordEncoder;
+
+fn main() {
+    let encoder: DelegatingPasswordEncoder = Default::default();
+
+    let some_entered_password = String::from("NotVerySecretPassword");
+    let some_stored_password_hash = String::from("{noop}NotVerySecretPassword");
+
+    if encoder.matches_spring_security_hash(&some_stored_password_hash, &some_stored_password_hash) {
+        println!("(insecure) passwords do match");
+    }
+}
 ```
 
 ## Supported encoders
 
 | identifier | Spring Security password encoder class                  | matches | encode | delegated | 
 |------------|---------------------------------------------------------|:-------:|:------:|:---------:|
-|            | o.s.s.c.password.DelegatingPasswordEncoder              |   ✏️    |   ✏️   |     -     |
+|            | o.s.s.c.password.DelegatingPasswordEncoder              |   ✅    |   ✅   |     -     |
 | argon2     | o.s.s.c.argon2.Argon2PasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
-| bcrypt     | o.s.s.c.bcrypt.BCryptPasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
+| bcrypt     | o.s.s.c.bcrypt.BCryptPasswordEncoder                    |    ✅    |   ✅    |     ✅     |
 | pbkdf2     | o.s.s.c.password.Pbkdf2PasswordEncoder                  |   ✏️    |   ✏️   |    ✏️     |
 | scrypt     | o.s.s.c.scrypt.SCryptPasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
 | ldap       | o.s.s.c.password.LdapShaPasswordEncoder                 |   ✏️    |   ✏️   |    ✏️     |
@@ -43,7 +64,7 @@ Checking if password matches:
 | MD5        | o.s.s.c.password.MessageDigestPasswordEncoder (md5)     |   ✏️    |   ✏️   |    ✏️     |
 | SHA-1      | o.s.s.c.password.MessageDigestPasswordEncoder (sha-1)   |   ✏️    |   ✏️   |    ✏️     |
 | SHA-256    | o.s.s.c.password.MessageDigestPasswordEncoder (sha-256) |   ✏️    |   ✏️   |    ✏️     |
-| noop       | o.s.s.c.password.NoOpPasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
+| noop       | o.s.s.c.password.NoOpPasswordEncoder                    |    ✅    |   ✅    |     ✅     |
 | sha256     | o.s.s.c.password.StandardPasswordEncoder                |   ✏️    |   ✏️   |    ✏️     |
 
 **Note:** the replacement for `DelegatingPasswordEncoder` will support all the encoders listed above (depending on their status)

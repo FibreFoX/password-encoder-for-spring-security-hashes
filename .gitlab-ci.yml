@@ -20,7 +20,10 @@ rust:
   parallel:
     matrix:
       - BUILD_IMAGE:
+          - "rust:1.66"
+          - "rust:1.67"
           - "rust:1.68"
+          - "rust:1.69"
           - "rustlang/rust:nightly"
   image: $BUILD_IMAGE
   script:
