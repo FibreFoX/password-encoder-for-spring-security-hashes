@@ -1,6 +1,6 @@
 use crate::PasswordEncoder;
-use md4::{Md4, Digest};
 use hex::decode;
+use md4::{Digest, Md4};
 
 #[derive(Debug)]
 pub struct Md4PasswordEncoder {
@@ -16,12 +16,16 @@ impl Default for Md4PasswordEncoder {
             salt_prefix: String::from("{"),
             salt_suffix: String::from("}"),
             // https://github.com/spring-projects/spring-security/blob/a4e13c520b351c48378d0287167e53cfc581de46/crypto/src/main/java/org/springframework/security/crypto/keygen/Base64StringKeyGenerator.java#L31
-            salt_byte_size: 32
+            salt_byte_size: 32,
         }
     }
 }
 
-fn extract_salt(salt_prefix: &String, salt_suffix: &String,encoded_password: &String) -> Option<String>{
+fn extract_salt(
+    salt_prefix: &String,
+    salt_suffix: &String,
+    encoded_password: &String,
+) -> Option<String> {
     // salt is optional :(
     let prefix_length = salt_prefix.len();
     if encoded_password.starts_with(salt_prefix) {
@@ -47,7 +51,8 @@ mod salt_tests {
 
     #[test]
     fn can_find_salt_with_proper_prefix_with_proper_suffix() {
-        let encoded_password_with_proper_format = String::from("{thisissalt}6cc7924dad12ade79dfb99e424f25260");
+        let encoded_password_with_proper_format =
+            String::from("{thisissalt}6cc7924dad12ade79dfb99e424f25260");
         let prefix = String::from("{");
         let suffix = String::from("}");
 
@@ -60,7 +65,8 @@ mod salt_tests {
 
     #[test]
     fn unable_to_find_salt_with_proper_prefix_but_missing_suffix() {
-        let encoded_password_with_proper_format = String::from("{thisissalt6cc7924dad12ade79dfb99e424f25260");
+        let encoded_password_with_proper_format =
+            String::from("{thisissalt6cc7924dad12ade79dfb99e424f25260");
         let prefix = String::from("{");
         let suffix = String::from("}");
 
@@ -71,7 +77,8 @@ mod salt_tests {
 
     #[test]
     fn unable_to_find_salt_with_proper_suffix_but_missing_prefix() {
-        let encoded_password_with_proper_format = String::from("thisissalt}6cc7924dad12ade79dfb99e424f25260");
+        let encoded_password_with_proper_format =
+            String::from("thisissalt}6cc7924dad12ade79dfb99e424f25260");
         let prefix = String::from("{");
         let suffix = String::from("}");
 
@@ -82,7 +89,8 @@ mod salt_tests {
 
     #[test]
     fn unable_to_find_salt_without_salt_markers() {
-        let encoded_password_with_proper_format = String::from("thisissalt6cc7924dad12ade79dfb99e424f25260");
+        let encoded_password_with_proper_format =
+            String::from("thisissalt6cc7924dad12ade79dfb99e424f25260");
         let prefix = String::from("{");
         let suffix = String::from("}");
 
@@ -93,7 +101,8 @@ mod salt_tests {
 
     #[test]
     fn can_find_salt_with_multiple_prefixes_with_proper_suffix() {
-        let encoded_password_with_proper_format = String::from("{{thisissalt}6cc7924dad12ade79dfb99e424f25260");
+        let encoded_password_with_proper_format =
+            String::from("{{thisissalt}6cc7924dad12ade79dfb99e424f25260");
         let prefix = String::from("{");
         let suffix = String::from("}");
 
@@ -106,7 +115,8 @@ mod salt_tests {
 
     #[test]
     fn can_find_salt_with_multiple_suffixes_with_proper_prefix() {
-        let encoded_password_with_proper_format = String::from("{thisissalt}}6cc7924dad12ade79dfb99e424f25260");
+        let encoded_password_with_proper_format =
+            String::from("{thisissalt}}6cc7924dad12ade79dfb99e424f25260");
         let prefix = String::from("{");
         let suffix = String::from("}");
 
@@ -119,7 +129,8 @@ mod salt_tests {
 
     #[test]
     fn can_find_salt_with_multiple_suffixes_with_multiple_prefixes() {
-        let encoded_password_with_proper_format = String::from("{{thisissalt}}6cc7924dad12ade79dfb99e424f25260");
+        let encoded_password_with_proper_format =
+            String::from("{{thisissalt}}6cc7924dad12ade79dfb99e424f25260");
         let prefix = String::from("{");
         let suffix = String::from("}");
 
@@ -132,7 +143,11 @@ mod salt_tests {
 }
 
 impl PasswordEncoder for Md4PasswordEncoder {
-    fn matches_spring_security_hash(&self, unencoded_password: &String, encoded_password: &String) -> bool {
+    fn matches_spring_security_hash(
+        &self,
+        unencoded_password: &String,
+        encoded_password: &String,
+    ) -> bool {
         let salt = extract_salt(&self.salt_prefix, &self.salt_suffix, &encoded_password);
         let mut password_to_hash = String::from(unencoded_password);
         let mut encoded_password_to_compare_against = String::from(encoded_password);
@@ -143,7 +158,9 @@ impl PasswordEncoder for Md4PasswordEncoder {
             password_to_hash.push_str(found_salt.as_str());
             password_to_hash.push_str(&self.salt_suffix);
             // strip salt from encoded_password
-            encoded_password_to_compare_against = encoded_password[(&self.salt_prefix.len()+found_salt.as_str().len()+&self.salt_suffix.len())..].to_string();
+            encoded_password_to_compare_against = encoded_password
+                [(&self.salt_prefix.len() + found_salt.as_str().len() + &self.salt_suffix.len())..]
+                .to_string();
         }
 
         println!("Checking: {}", &unencoded_password);
@@ -161,12 +178,12 @@ impl PasswordEncoder for Md4PasswordEncoder {
                 // println!("{:?}", &encoded_password_string);
                 // encoded_password_string == md4_bytes
                 encoded_password_string == &md4_hash_bytes[..]
-            },
+            }
             Err(err) => {
                 println!("{}", err);
                 false
             }
-        }
+        };
     }
 
     fn encode_spring_security_hash(&self, unencoded_password: &String) -> Option<String> {
@@ -177,8 +194,8 @@ impl PasswordEncoder for Md4PasswordEncoder {
 
 #[cfg(test)]
 mod tests {
-    use super::PasswordEncoder;
     use super::Md4PasswordEncoder;
+    use super::PasswordEncoder;
 
     #[test]
     fn matches_correct_password_with_salt() {

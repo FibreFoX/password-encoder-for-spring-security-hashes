@@ -29,6 +29,7 @@ pub enum Encoder {
 
 impl Encoder {
     fn to_string(&self) -> String {
+        // https://github.com/spring-projects/spring-security/blob/0e3ee8990299436223c3037afb096f454f17ef5e/crypto/src/main/java/org/springframework/security/crypto/factory/PasswordEncoderFactories.java#L72
         match self {
             Encoder::ARGON2 => "argon2".to_string(),
             Encoder::BCRYPT => "bcrypt".to_string(),
