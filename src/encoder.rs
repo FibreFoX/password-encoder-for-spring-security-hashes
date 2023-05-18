@@ -8,6 +8,7 @@ pub mod ldap;
 pub mod md;
 */
 pub mod md4;
+pub mod md5;
 pub mod noop;
 /*
 pub mod pbkdf2;

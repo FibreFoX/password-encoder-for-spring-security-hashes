@@ -35,6 +35,7 @@ impl Encoder {
             Encoder::BCRYPT => "bcrypt".to_string(),
             Encoder::LDAP => "ldap".to_string(),
             Encoder::MD4 => "MD4".to_string(),
+            Encoder::MD5 => "MD5".to_string(),
             _ => "".to_string(),
         }
     }

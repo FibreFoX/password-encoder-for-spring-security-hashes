@@ -61,13 +61,14 @@ fn main() {
 | scrypt     | o.s.s.c.scrypt.SCryptPasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
 | ldap       | o.s.s.c.password.LdapShaPasswordEncoder                 |   ✏️    |   ✏️   |    ✏️     |
 | MD4        | o.s.s.c.password.Md4PasswordEncoder                     |    ✅    |   ✏️   |     ✅     |
-| MD5        | o.s.s.c.password.MessageDigestPasswordEncoder (md5)     |   ✏️    |   ✏️   |    ✏️     |
+| MD5        | o.s.s.c.password.MessageDigestPasswordEncoder (md5)     |    ✅    |   ✏️   |     ✅     |
 | SHA-1      | o.s.s.c.password.MessageDigestPasswordEncoder (sha-1)   |   ✏️    |   ✏️   |    ✏️     |
 | SHA-256    | o.s.s.c.password.MessageDigestPasswordEncoder (sha-256) |   ✏️    |   ✏️   |    ✏️     |
 | noop       | o.s.s.c.password.NoOpPasswordEncoder                    |    ✅    |   ✅    |     ✅     |
 | sha256     | o.s.s.c.password.StandardPasswordEncoder                |   ✏️    |   ✏️   |    ✏️     |
 
-**Note:** the replacement for `DelegatingPasswordEncoder` will support all the encoders listed above (depending on their status)
+**Note:** there will be no 100% feature matching to the Spring Security implementation, especially custom configuration
+of each encoder is not planned to be implemented.
 
 ### Icon legend
 

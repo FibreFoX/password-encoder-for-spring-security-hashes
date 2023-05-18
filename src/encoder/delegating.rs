@@ -1,5 +1,6 @@
 use crate::encoder::bcrypt::BCryptPasswordEncoder;
 use crate::encoder::md4::Md4PasswordEncoder;
+use crate::encoder::md5::Md5PasswordEncoder;
 use crate::encoder::noop::NoOpPasswordEncoder;
 use crate::PasswordEncoder;
 // use std::collections::HashMap;
@@ -409,6 +410,18 @@ impl PasswordEncoder for DelegatingPasswordEncoder {
                         ),
                     )
                 }
+                "MD5" => {
+                    let encoder: Md5PasswordEncoder = Default::default();
+                    encoder.matches_spring_security_hash(
+                        &unencoded_password,
+                        &without_delegation_marker(
+                            &encoded_password,
+                            &encoder_id,
+                            &self.id_prefix,
+                            &self.id_suffix,
+                        ),
+                    )
+                }
                 _ => todo!(),
             },
             None => false,
@@ -440,6 +453,15 @@ impl PasswordEncoder for DelegatingPasswordEncoder {
                 with_delegation_marker(
                     encoder.encode_spring_security_hash(&unencoded_password),
                     "MD4".to_string(),
+                    &self.id_prefix,
+                    &self.id_suffix,
+                )
+            }
+            "MD5" => {
+                let encoder: Md5PasswordEncoder = Default::default();
+                with_delegation_marker(
+                    encoder.encode_spring_security_hash(&unencoded_password),
+                    "MD%".to_string(),
                     &self.id_prefix,
                     &self.id_suffix,
                 )
