@@ -17,6 +17,7 @@ variables:
 
 rust:
   stage: build
+  interruptible: true
   parallel:
     matrix:
       - BUILD_IMAGE:
