@@ -371,7 +371,7 @@ impl PasswordEncoder for DelegatingPasswordEncoder {
                     let encoder: BCryptPasswordEncoder = Default::default();
                     encoder.matches_spring_security_hash(&unencoded_password, &without_delegation_marker(&encoded_password, &encoder_id, &self.id_prefix, &self.id_suffix))
                 }
-                "md4" => {
+                "MD4" => {
                     let encoder: Md4PasswordEncoder = Default::default();
                     encoder.matches_spring_security_hash(&unencoded_password, &without_delegation_marker(&encoded_password, &encoder_id, &self.id_prefix, &self.id_suffix))
                 }
@@ -391,9 +391,9 @@ impl PasswordEncoder for DelegatingPasswordEncoder {
                 let encoder: BCryptPasswordEncoder = Default::default();
                 with_delegation_marker(encoder.encode_spring_security_hash(&unencoded_password), "bcrypt".to_string(), &self.id_prefix, &self.id_suffix)
             }
-            "md4" => {
+            "MD4" => {
                 let encoder: Md4PasswordEncoder = Default::default();
-                with_delegation_marker(encoder.encode_spring_security_hash(&unencoded_password), "md4".to_string(), &self.id_prefix, &self.id_suffix)
+                with_delegation_marker(encoder.encode_spring_security_hash(&unencoded_password), "MD4".to_string(), &self.id_prefix, &self.id_suffix)
             }
             _ => {
                 // TODO
