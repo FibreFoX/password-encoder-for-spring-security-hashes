@@ -60,7 +60,7 @@ fn main() {
 | pbkdf2     | o.s.s.c.password.Pbkdf2PasswordEncoder                  |   ✏️    |   ✏️   |    ✏️     |
 | scrypt     | o.s.s.c.scrypt.SCryptPasswordEncoder                    |   ✏️    |   ✏️   |    ✏️     |
 | ldap       | o.s.s.c.password.LdapShaPasswordEncoder                 |   ✏️    |   ✏️   |    ✏️     |
-| MD4        | o.s.s.c.password.Md4PasswordEncoder                     |    ✅    |   ✅    |     ✅     |
+| MD4        | o.s.s.c.password.Md4PasswordEncoder                     |    ✅    |   ✏️   |     ✅     |
 | MD5        | o.s.s.c.password.MessageDigestPasswordEncoder (md5)     |   ✏️    |   ✏️   |    ✏️     |
 | SHA-1      | o.s.s.c.password.MessageDigestPasswordEncoder (sha-1)   |   ✏️    |   ✏️   |    ✏️     |
 | SHA-256    | o.s.s.c.password.MessageDigestPasswordEncoder (sha-256) |   ✏️    |   ✏️   |    ✏️     |
