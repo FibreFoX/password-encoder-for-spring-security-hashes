@@ -163,10 +163,6 @@ impl PasswordEncoder for Md4PasswordEncoder {
                 .to_string();
         }
 
-        println!("Checking: {}", &unencoded_password);
-        println!("Checking: {}", &password_to_hash);
-        println!("Checking: {}", &encoded_password_to_compare_against);
-
         let mut hasher = Md4::new();
         hasher.update(password_to_hash.as_bytes());
         let md4_hash_bytes = hasher.finalize();
@@ -179,10 +175,7 @@ impl PasswordEncoder for Md4PasswordEncoder {
                 // encoded_password_string == md4_bytes
                 encoded_password_string == &md4_hash_bytes[..]
             }
-            Err(err) => {
-                println!("{}", err);
-                false
-            }
+            Err(err) => false,
         };
     }
 
