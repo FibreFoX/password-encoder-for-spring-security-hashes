@@ -31,6 +31,9 @@ impl Encoder {
     fn to_string(&self) -> String {
         match self {
             Encoder::ARGON2 => "argon".to_string(),
+            Encoder::BCRYPT => "bcrypt".to_string(),
+            Encoder::LDAP => "ldap".to_string(),
+            Encoder::MD4 => "md4".to_string(),
             _ => "".to_string(),
         }
     }
