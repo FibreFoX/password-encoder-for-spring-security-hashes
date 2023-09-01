@@ -25,6 +25,8 @@ rust:
           - "rust:1.67"
           - "rust:1.68"
           - "rust:1.69"
+          - "rust:1.70"
+          - "rust:1.71"
           - "rustlang/rust:nightly"
   image: $BUILD_IMAGE
   script:
