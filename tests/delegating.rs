@@ -13,5 +13,8 @@ fn crate_delegating_encode_default() {
 
     assert_ne!(encoded_password, given_password);
 
+    // make sure it starts with default encoder
+    assert!(encoded_password.starts_with("{bcrypt}"));
+
     assert!(encoder.matches_spring_security_hash(&given_password, &encoded_password));
 }
