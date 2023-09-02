@@ -4,11 +4,7 @@ use crate::PasswordEncoder;
 pub struct NoOpPasswordEncoder;
 
 impl PasswordEncoder for NoOpPasswordEncoder {
-    fn matches_spring_security_hash(
-        &self,
-        unencoded_password: &String,
-        encoded_password: &String,
-    ) -> bool {
+    fn matches_spring_security_hash(&self, unencoded_password: &String, encoded_password: &String) -> bool {
         unencoded_password.eq(encoded_password)
     }
 
@@ -28,9 +24,7 @@ mod tests {
 
         let given_password = String::from("Hello");
 
-        let encoded_password = encoder
-            .encode_spring_security_hash(&given_password)
-            .unwrap();
+        let encoded_password = encoder.encode_spring_security_hash(&given_password).unwrap();
 
         assert_eq!(encoded_password, given_password);
     }
@@ -41,9 +35,7 @@ mod tests {
 
         let given_password = String::from("");
 
-        let encoded_password = encoder
-            .encode_spring_security_hash(&given_password)
-            .unwrap();
+        let encoded_password = encoder.encode_spring_security_hash(&given_password).unwrap();
 
         assert_eq!(encoded_password, given_password);
     }

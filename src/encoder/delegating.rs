@@ -121,11 +121,7 @@ mod test_get_encoder_for_id {
 }
  */
 
-fn get_encoder_id_from_encoded_password(
-    encoded_password: &String,
-    id_prefix: &String,
-    id_suffix: &String,
-) -> Option<String> {
+fn get_encoder_id_from_encoded_password(encoded_password: &String, id_prefix: &String, id_suffix: &String) -> Option<String> {
     if !encoded_password.starts_with(id_prefix) || !encoded_password.contains(id_suffix) {
         return None;
     }
@@ -338,12 +334,7 @@ mod test_get_encoder_id_from_encoded_password_multiple_chars_marker {
     }
 }
 
-fn with_delegation_marker(
-    resulting_password_hash: Option<String>,
-    encoder_id: String,
-    id_prefix: &String,
-    id_suffix: &String,
-) -> Option<String> {
+fn with_delegation_marker(resulting_password_hash: Option<String>, encoder_id: String, id_prefix: &String, id_suffix: &String) -> Option<String> {
     if resulting_password_hash.is_none() {
         return None;
     }
@@ -351,75 +342,42 @@ fn with_delegation_marker(
     Some(id_prefix.to_owned() + &encoder_id + id_suffix + &*resulting_password_hash.unwrap())
 }
 
-fn without_delegation_marker(
-    encoded_password_hash: &String,
-    encoder_id: &String,
-    id_prefix: &String,
-    id_suffix: &String,
-) -> String {
+fn without_delegation_marker(encoded_password_hash: &String, encoder_id: &String, id_prefix: &String, id_suffix: &String) -> String {
     encoded_password_hash[(id_prefix.len() + encoder_id.len() + id_suffix.len())..].to_string()
 }
 
 impl PasswordEncoder for DelegatingPasswordEncoder {
-    fn matches_spring_security_hash(
-        &self,
-        unencoded_password: &String,
-        encoded_password: &String,
-    ) -> bool {
+    fn matches_spring_security_hash(&self, unencoded_password: &String, encoded_password: &String) -> bool {
         // find encoder id
-        let encoder_id = get_encoder_id_from_encoded_password(
-            &encoded_password,
-            &self.id_prefix,
-            &self.id_suffix,
-        );
+        let encoder_id = get_encoder_id_from_encoded_password(&encoded_password, &self.id_prefix, &self.id_suffix);
         match encoder_id {
             Some(encoder_id) => match encoder_id.as_str() {
                 "noop" => {
                     let encoder: NoOpPasswordEncoder = Default::default();
                     encoder.matches_spring_security_hash(
                         &unencoded_password,
-                        &without_delegation_marker(
-                            &encoded_password,
-                            &encoder_id,
-                            &self.id_prefix,
-                            &self.id_suffix,
-                        ),
+                        &without_delegation_marker(&encoded_password, &encoder_id, &self.id_prefix, &self.id_suffix),
                     )
                 }
                 "bcrypt" => {
                     let encoder: BCryptPasswordEncoder = Default::default();
                     encoder.matches_spring_security_hash(
                         &unencoded_password,
-                        &without_delegation_marker(
-                            &encoded_password,
-                            &encoder_id,
-                            &self.id_prefix,
-                            &self.id_suffix,
-                        ),
+                        &without_delegation_marker(&encoded_password, &encoder_id, &self.id_prefix, &self.id_suffix),
                     )
                 }
                 "MD4" => {
                     let encoder: Md4PasswordEncoder = Default::default();
                     encoder.matches_spring_security_hash(
                         &unencoded_password,
-                        &without_delegation_marker(
-                            &encoded_password,
-                            &encoder_id,
-                            &self.id_prefix,
-                            &self.id_suffix,
-                        ),
+                        &without_delegation_marker(&encoded_password, &encoder_id, &self.id_prefix, &self.id_suffix),
                     )
                 }
                 "MD5" => {
                     let encoder: Md5PasswordEncoder = Default::default();
                     encoder.matches_spring_security_hash(
                         &unencoded_password,
-                        &without_delegation_marker(
-                            &encoded_password,
-                            &encoder_id,
-                            &self.id_prefix,
-                            &self.id_suffix,
-                        ),
+                        &without_delegation_marker(&encoded_password, &encoder_id, &self.id_prefix, &self.id_suffix),
                     )
                 }
                 _ => todo!(),

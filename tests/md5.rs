@@ -7,9 +7,7 @@ fn crate_delegating_encode_default() {
 
     let encoder: Md5PasswordEncoder = Default::default();
 
-    let encoded_password = encoder
-        .encode_spring_security_hash(&given_password)
-        .unwrap();
+    let encoded_password = encoder.encode_spring_security_hash(&given_password).unwrap();
 
     assert_ne!(encoded_password, given_password);
 

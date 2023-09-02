@@ -7,9 +7,7 @@ fn crate_noop_encode() {
 
     let encoder: NoOpPasswordEncoder = Default::default();
 
-    let encoded_password = encoder
-        .encode_spring_security_hash(&given_password)
-        .unwrap();
+    let encoded_password = encoder.encode_spring_security_hash(&given_password).unwrap();
 
     // NOOP is special, others should be _ne
     assert_eq!(encoded_password, given_password);

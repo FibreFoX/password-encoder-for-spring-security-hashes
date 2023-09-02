@@ -2,11 +2,7 @@
 pub mod encoder;
 
 pub trait PasswordEncoder {
-    fn matches_spring_security_hash(
-        &self,
-        unencoded_password: &String,
-        encoded_password: &String,
-    ) -> bool;
+    fn matches_spring_security_hash(&self, unencoded_password: &String, encoded_password: &String) -> bool;
 
     /// If password can be encoded, this might return the encoded password hash
     fn encode_spring_security_hash(&self, unencoded_password: &String) -> Option<String>;

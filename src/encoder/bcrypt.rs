@@ -5,11 +5,7 @@ use bcrypt::{hash_with_result, verify, Version};
 pub struct BCryptPasswordEncoder {}
 
 impl PasswordEncoder for BCryptPasswordEncoder {
-    fn matches_spring_security_hash(
-        &self,
-        unencoded_password: &String,
-        encoded_password: &String,
-    ) -> bool {
+    fn matches_spring_security_hash(&self, unencoded_password: &String, encoded_password: &String) -> bool {
         let result = verify(unencoded_password, encoded_password);
         if result.is_err() {
             // println!("Got error: {}", &result.unwrap_err());
@@ -41,8 +37,7 @@ mod tests {
         // not sure why, but no costs is or was allowed in spring security ...
         // https://github.com/spring-projects/spring-security/blob/dd4ce248883ef911e7384c46289c882eb30e3dd6/crypto/src/test/java/org/springframework/security/crypto/bcrypt/BCryptPasswordEncoderTests.java#L218
         let correct_password = String::from("password");
-        let stored_password =
-            String::from("$2a$00$9N8N35BVs5TLqGL3pspAte5OWWA2a2aZIs.EGp7At7txYakFERMue");
+        let stored_password = String::from("$2a$00$9N8N35BVs5TLqGL3pspAte5OWWA2a2aZIs.EGp7At7txYakFERMue");
         let encoder: BCryptPasswordEncoder = Default::default();
 
         // would fly through on spring ... sorry pal, too insecure
@@ -66,8 +61,7 @@ mod tests {
         let encoder: BCryptPasswordEncoder = Default::default();
 
         let unencoded_password = String::from("password");
-        let stored_encoded_password =
-            String::from("$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG");
+        let stored_encoded_password = String::from("$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG");
 
         assert!(encoder.matches_spring_security_hash(&unencoded_password, &stored_encoded_password));
     }
@@ -77,11 +71,8 @@ mod tests {
         let encoder: BCryptPasswordEncoder = Default::default();
 
         let unencoded_password = String::from("wrongpassword");
-        let stored_encoded_password =
-            String::from("$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG");
+        let stored_encoded_password = String::from("$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG");
 
-        assert!(
-            !encoder.matches_spring_security_hash(&unencoded_password, &stored_encoded_password)
-        );
+        assert!(!encoder.matches_spring_security_hash(&unencoded_password, &stored_encoded_password));
     }
 }
