@@ -29,6 +29,11 @@ rust:
           - "rust:1.71"
           - "rustlang/rust:nightly"
   image: $BUILD_IMAGE
+  before_script:
+    - rustup component add rustfmt
+    - rustup component add clippy
   script:
     - cargo build --verbose
     - cargo test --verbose
+    - cargo fmt --all --check
+    - cargo clippy --no-deps
